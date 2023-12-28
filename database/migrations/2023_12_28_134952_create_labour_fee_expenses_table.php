@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('labour_fee_expenses', function (Blueprint $table) {
             $table->id();
             $table->integer('worker_number');
-            $table->string('quantity');
+            $table->integer('quantity');
             $table->integer('price');
             $table->longText('description')->nullable();
             $table->timestamps();

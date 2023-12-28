@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->integer('price');
-            $table->longText('description');
+            $table->longText('description')->nullable();
             $table->foreignId('general_expense_types_id')->constrained('general_expense_types')->cascadeOnDelete();
             $table->timestamps();
         });
