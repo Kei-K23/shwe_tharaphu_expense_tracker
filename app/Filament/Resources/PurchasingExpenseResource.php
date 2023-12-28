@@ -19,6 +19,8 @@ class PurchasingExpenseResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?string $navigationLabel = 'Purchase';
+
     public static function form(Form $form): Form
     {
         return $form
@@ -28,13 +30,22 @@ class PurchasingExpenseResource extends Resource
                     ->maxLength(255)
                     ->required(),
                 Forms\Components\TextInput::make('quantity')
+                    ->numeric()
                     ->gt(0),
                 Forms\Components\TextInput::make('unit_price')
+                    ->numeric()
+                    ->prefix('MMK')
+                    ->prefix('MMK')
                     ->gt(0),
                 Forms\Components\TextInput::make('total_cost')
+                    ->numeric()
+                    ->prefix('MMK')
                     ->gt(0)
                     ->required(),
-                Forms\Components\Textarea::make('description')
+                Forms\Components\Textarea::make('description'),
+                Forms\Components\DatePicker::make('created_at')
+                    ->maxDate(now())
+                    ->default(now()),
             ]);
     }
 
@@ -42,7 +53,14 @@ class PurchasingExpenseResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('item_name'),
+                Tables\Columns\TextColumn::make('unit_price'),
+                Tables\Columns\TextColumn::make('total_cost'),
+                Tables\Columns\TextColumn::make('description')
+                    ->placeholder('No description.'),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->sortable()
+                    ->label('Date'),
             ])
             ->filters([
                 //

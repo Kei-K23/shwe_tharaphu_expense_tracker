@@ -19,6 +19,8 @@ class LabourFeeExpenseResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?string $navigationLabel = 'Labours';
+
     public static function form(Form $form): Form
     {
         return $form
@@ -26,12 +28,18 @@ class LabourFeeExpenseResource extends Resource
                 Forms\Components\TextInput::make('worker_number')
                     ->required(),
                 Forms\Components\TextInput::make('quantity')
+                    ->numeric()
                     ->gt(0)
                     ->required(),
                 Forms\Components\TextInput::make('price')
+                    ->numeric()
+                    ->prefix('MMK')
                     ->gt(0)
                     ->required(),
                 Forms\Components\Textarea::make('description'),
+                Forms\Components\DatePicker::make('created_at')
+                    ->maxDate(now())
+                    ->default(now()),
             ]);
     }
 
@@ -39,7 +47,14 @@ class LabourFeeExpenseResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('worker_number'),
+                Tables\Columns\TextColumn::make('quantity'),
+                Tables\Columns\TextColumn::make('price'),
+                Tables\Columns\TextColumn::make('description')
+                    ->placeholder('No description.'),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->sortable()
+                    ->label('Date'),
             ])
             ->filters([
                 //

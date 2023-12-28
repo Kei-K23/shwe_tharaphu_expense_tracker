@@ -19,6 +19,8 @@ class GeneralExpenseResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?string $navigationLabel = 'General';
+
     public static function form(Form $form): Form
     {
         return $form
@@ -28,11 +30,15 @@ class GeneralExpenseResource extends Resource
                     ->maxLength(255)
                     ->required(),
                 Forms\Components\TextInput::make('price')
+                    ->numeric()
                     ->gt(0)
                     ->required(),
                 Forms\Components\Textarea::make('description'),
+                Forms\Components\DatePicker::make('created_at')
+                    ->maxDate(now())
+                    ->default(now()),
                 Forms\Components\Select::make('general_expense_types_id')
-                    ->relationship('owner', 'name')
+                    ->relationship('generalExpenseType', 'name')
                     ->searchable()
                     ->preload()
                     ->createOptionForm([
@@ -48,16 +54,22 @@ class GeneralExpenseResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('type'),
-                Tables\Columns\TextColumn::make('date_of_birth'),
-                Tables\Columns\TextColumn::make('owner.name'),
+                Tables\Columns\TextColumn::make('title')->searchable(),
+                Tables\Columns\TextColumn::make('price'),
+                Tables\Columns\TextColumn::make('description')
+                    ->placeholder('No description.'),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->sortable()
+                    ->label('Date'),
+                Tables\Columns\TextColumn::make('generalExpenseType.name'),
             ])
             ->filters([
                 //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\ViewAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
