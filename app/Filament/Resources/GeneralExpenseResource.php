@@ -34,6 +34,7 @@ class GeneralExpenseResource extends Resource
                     ->required(),
                 Forms\Components\TextInput::make('price')
                     ->numeric()
+                    ->prefix('MMK')
                     ->gt(0)
                     ->required(),
                 Forms\Components\Textarea::make('description'),
@@ -65,7 +66,7 @@ class GeneralExpenseResource extends Resource
                     ->sortable()
                     ->label('Date'),
                 Tables\Columns\TextColumn::make('generalExpenseType.name'),
-            ])
+            ])->defaultSort('created_at', 'desc')
             ->filters(
                 [
                     Filter::make('created_at')
@@ -88,9 +89,9 @@ class GeneralExpenseResource extends Resource
                 layout: FiltersLayout::AboveContent
             )
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
-                Tables\Actions\ViewAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

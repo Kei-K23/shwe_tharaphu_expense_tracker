@@ -2,9 +2,8 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\LabourFeeExpenseResource\Pages;
-use App\Filament\Resources\LabourFeeExpenseResource\RelationManagers;
-use App\Models\LabourFeeExpense;
+use App\Filament\Resources\LaborFeeExpenseResource\Pages;
+use App\Models\LaborFeeExpense;
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Form;
@@ -16,13 +15,13 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class LabourFeeExpenseResource extends Resource
+class LaborFeeExpenseResource extends Resource
 {
-    protected static ?string $model = LabourFeeExpense::class;
+    protected static ?string $model = LaborFeeExpense::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-user';
 
-    protected static ?string $navigationLabel = 'Labours';
+    protected static ?string $navigationLabel = 'Labors';
 
     public static function form(Form $form): Form
     {
@@ -79,11 +78,11 @@ class LabourFeeExpenseResource extends Resource
                         })
                 ],
                 layout: FiltersLayout::AboveContent
-            )
+            )->defaultSort('created_at', 'desc')
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
-                Tables\Actions\ViewAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -102,9 +101,9 @@ class LabourFeeExpenseResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListLabourFeeExpenses::route('/'),
-            'create' => Pages\CreateLabourFeeExpense::route('/create'),
-            'edit' => Pages\EditLabourFeeExpense::route('/{record}/edit'),
+            'index' => Pages\ListLaborFeeExpenses::route('/'),
+            'create' => Pages\CreateLaborFeeExpense::route('/create'),
+            'edit' => Pages\EditLaborFeeExpense::route('/{record}/edit'),
         ];
     }
 }

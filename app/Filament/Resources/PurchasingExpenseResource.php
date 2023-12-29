@@ -38,7 +38,6 @@ class PurchasingExpenseResource extends Resource
                 Forms\Components\TextInput::make('unit_price')
                     ->numeric()
                     ->prefix('MMK')
-                    ->prefix('MMK')
                     ->gt(0),
                 Forms\Components\TextInput::make('total_cost')
                     ->numeric()
@@ -85,11 +84,11 @@ class PurchasingExpenseResource extends Resource
                         })
                 ],
                 layout: FiltersLayout::AboveContent
-            )
+            )->defaultSort('created_at', 'desc')
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
-                Tables\Actions\ViewAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

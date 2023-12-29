@@ -6,7 +6,7 @@ namespace Database\Seeders;
 
 use App\Models\GeneralExpense;
 use App\Models\GeneralExpenseType;
-use App\Models\LabourFeeExpense;
+use App\Models\LaborFeeExpense;
 use App\Models\PurchasingExpense;
 use Illuminate\Database\Seeder;
 
@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        LabourFeeExpense::factory()->count(60)->create();
+        LaborFeeExpense::factory()->count(60)->create();
         PurchasingExpense::factory()->count(60)->create();
 
         $expenseType1 = GeneralExpenseType::factory()->create([

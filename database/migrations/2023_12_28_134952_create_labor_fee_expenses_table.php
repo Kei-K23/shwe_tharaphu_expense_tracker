@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('labour_fee_expenses', function (Blueprint $table) {
+        Schema::create('labor_fee_expenses', function (Blueprint $table) {
             $table->id();
             $table->integer('worker_number');
             $table->integer('quantity');
-            $table->integer('price');
+            $table->bigInteger('price');
             $table->longText('description')->nullable();
             $table->timestamps();
         });
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('labour_fee_expenses');
+        Schema::dropIfExists('labor_fee_expenses');
     }
 };

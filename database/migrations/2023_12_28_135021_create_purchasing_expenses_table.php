@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('item_name');
             $table->integer('quantity')->nullable();
-            $table->integer('unit_price')->nullable();
-            $table->integer('total_cost');
+            $table->bigInteger('unit_price')->nullable();
+            $table->bigInteger('total_cost');
             $table->longText('description')->nullable();
             $table->timestamps();
         });
