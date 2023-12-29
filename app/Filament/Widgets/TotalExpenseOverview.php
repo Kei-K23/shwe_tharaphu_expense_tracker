@@ -7,33 +7,39 @@ use App\Models\LaborFeeExpense;
 use App\Models\PurchasingExpense;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
+use Illuminate\Support\Carbon;
+use Livewire\Attributes\On;
 
 class TotalExpenseOverview extends BaseWidget
 {
-    protected static ?int $sort = 1;
+    protected static ?int $sort = 2;
+
+
+    public Carbon $fromDate;
+    public Carbon $toDate;
+    // ...
+    #[On('updateFromDate')]
+    public function updateFromDate(string $from): void
+    {
+        $this->fromDate = Carbon::parse($from);
+        // $this->updateChartData();
+    }
+    #[On('updateToDate')]
+    public function updateToDate(string $to): void
+    {
+        $this->toDate = Carbon::parse($to);
+        // $this->updateChartData();
+    }
 
     protected function getStats(): array
     {
-        $totalGeneralExpense = 0;
-        $generalExpense = GeneralExpense::pluck('price');
+        $fromDate = $this->fromDate ?? now()->subYear();
+        $toDate = $this->toDate ?? now();
 
-        foreach ($generalExpense as $price) {
-            $totalGeneralExpense += $price;
-        }
+        $totalGeneralExpense = GeneralExpense::whereBetween('created_at', [$fromDate, $toDate])->sum('price');
+        $totalLaborExpense = LaborFeeExpense::whereBetween('created_at', [$fromDate, $toDate])->sum('price');
+        $totalPurchaseExpense = PurchasingExpense::whereBetween('created_at', [$fromDate, $toDate])->sum('total_cost');
 
-        $totalLaborExpense = 0;
-        $laborExpense = LaborFeeExpense::pluck('price');
-
-        foreach ($laborExpense as $price) {
-            $totalLaborExpense += $price;
-        }
-
-        $totalPurchaseExpense = 0;
-        $purchaseExpense = PurchasingExpense::pluck('total_cost');
-
-        foreach ($purchaseExpense as $price) {
-            $totalPurchaseExpense += $price;
-        }
 
         return [
             Stat::make('General (MMK)', $totalGeneralExpense),
