@@ -6,9 +6,12 @@ use App\Filament\Resources\LabourFeeExpenseResource\Pages;
 use App\Filament\Resources\LabourFeeExpenseResource\RelationManagers;
 use App\Models\LabourFeeExpense;
 use Filament\Forms;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Enums\FiltersLayout;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -17,7 +20,7 @@ class LabourFeeExpenseResource extends Resource
 {
     protected static ?string $model = LabourFeeExpense::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-user';
 
     protected static ?string $navigationLabel = 'Labours';
 
@@ -56,11 +59,31 @@ class LabourFeeExpenseResource extends Resource
                     ->sortable()
                     ->label('Date'),
             ])
-            ->filters([
-                //
-            ])
+            ->filters(
+                [
+                    Filter::make('created_at')
+                        ->form([
+                            DatePicker::make('start_from'),
+                            DatePicker::make('until')
+                        ])
+                        ->query(function (Builder $query, array $data): Builder {
+                            return $query
+                                ->when(
+                                    $data['start_from'],
+                                    fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date)
+                                )
+                                ->when(
+                                    $data['until'],
+                                    fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date)
+                                );
+                        })
+                ],
+                layout: FiltersLayout::AboveContent
+            )
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\ViewAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
